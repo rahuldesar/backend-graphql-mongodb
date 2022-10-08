@@ -1,0 +1,1 @@
+RUN `node index.js` to start the server.
