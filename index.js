@@ -104,8 +104,7 @@ const typeDefs = gql`
       password: String!
     ): Token
 
-
-    addasFriend(
+    addAsFriend(
       name: String!
     ): User
 
@@ -148,7 +147,7 @@ const resolvers = {
   },
   Mutation:{
     addPerson: async (root, args, context) => {
-      const persons = new Person({ ...args });
+      const person = new Person({ ...args });
       const currentUser = context.currentUser;
       
       if(!currentUser){
@@ -157,6 +156,8 @@ const resolvers = {
 
       try{
         await person.save();
+        currentUser.friends = currentUser.friends.concat(person)
+        await currentUser.save();
       } catch ( error ) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
