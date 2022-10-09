@@ -113,6 +113,10 @@ const typeDefs = gql`
 
 `
 
+// ? createUser --> phone: String! ???????
+// TODO WILL CHECK LATER
+
+
 const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
