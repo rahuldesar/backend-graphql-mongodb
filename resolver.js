@@ -1,7 +1,11 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server');
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 const Person = require('./models/person');
 const User = require('./models/user');
+
+const { PubSub } = require ('graphql-subscriptions');
+const pubsub = new PubSub();
+
 
 const JWT_SECRET = process.env.SECRET;
 
@@ -37,6 +41,7 @@ const resolvers = {
       }
     }
   },
+
   Mutation:{
     addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
@@ -56,6 +61,8 @@ const resolvers = {
         })
       }
 
+      pubsub.publish('PERSON_ADDED', { personAdded: person });
+      
       return person;
     },
 
@@ -116,8 +123,12 @@ const resolvers = {
       await currentUser.save();
       return currentUser;
     }
-  }
-
+  },
+  Subscription : { 
+    personAdded : {
+      subscribe : () => pubsub.asyncIterator('PERSON_ADDED') 
+    },
+  },
 
 }
 
