@@ -14,10 +14,11 @@ const resolvers = {
     personCount: async () => Person.collection.countDocuments(),
 
     allPersons: async (root ,args) => {
+      console.log('Person.find');
       if(!args.phone){
-        return Person.find({})
+        return Person.find({}).populate('friendOf')
       }
-      return Person.find({phone: {$exists: args.phone === 'YES'}});
+      return Person.find({phone: {$exists: args.phone === 'YES'}}).populate('friendOf');
       
       // ? REMOVING FOR MONGOOSE IMPLEMENTATION
       // const byPhone = (person) => 
@@ -39,7 +40,8 @@ const resolvers = {
         street: root.street,
         city: root.city
       }
-    }
+    },
+    
   },
 
   Mutation:{

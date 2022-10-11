@@ -32,6 +32,9 @@ mongoose.connect(url)
     console.log('ERROR CONNECTING TO MONGODB', error.message)
   });
 
+
+  mongoose.set('debug',true); 
+
 // !  REPLACING WITH APOLLO SERVER EXPRESS. 
 // * THIS server is now within Start function.
 // ? Not Removing this to compare for future USES.
